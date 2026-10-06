@@ -1,0 +1,6 @@
+Plaintext
+pandas
+scikit-learn
+spacy
+anthropic
+jupyter
