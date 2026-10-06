@@ -1,0 +1,7 @@
+# Python & Jupyter
+__pycache__/
+.ipynb_checkpoints/
+.env
+
+# Large raw datasets
+data/raw_full_export.csv
