@@ -1,24 +1,29 @@
-
-# Golf Course Review Sentiment & Operational Driver Analysis
+# Golf Course Review Operational Diagnostic & Aspect Analysis
 
 ## Overview
-An NLP text classification model built to analyze public golf course reviews, predict review sentiment (Binary: Positive 4–5 stars vs. Negative 1–3 stars), and extract key operational drivers behind player satisfaction.
+An NLP and text-extraction pipeline designed to analyze public golf course reviews, extract structured operational issue flags and aspect-based sentiment, and quantify the exact drivers of customer dissatisfaction to inform management decision-making.
 
 ## Stakeholder & Business Problem
-* **Stakeholder:** Public Golf Course General Managers & Regional Directors of Golf.
-* **Problem:** Numerical star ratings (1–5) indicate satisfaction levels but obscure the root operational causes behind low scores.
-* **Impact:** Allows management to identify operational bottlenecks (e.g., slow pace of play, poor turf conditions, clubhouse service) and deploy targeted fixes before overall ratings drop.
+* **Stakeholder:** Public Golf Course General Managers, Head Superintendents, and Regional Directors of Golf.
+* **Problem:** Numerical star ratings (1–5) and aggregate sentiment scores indicate overall satisfaction levels but fail to explain the root operational causes behind low scores. Predicting whether a review is positive or negative provides little new information since the rating is already known.
+* **Impact:** Moving from prediction to explanation. This project quantifies the precise operational bottlenecks (e.g., slow pace of play, poor green conditions, clubhouse service issues) and measures their specific magnitude on customer ratings, giving management clear directives on where to allocate staff and capital.
 
-## Dataset
-* **Source:** Scraped Google Maps & GolfNow reviews across regional public courses.
-* **Target Variable:** `is_positive` (Binary: 1 for 4–5 stars, 0 for 1–3 stars).
-* **Sample Data:** Stored in `data/sample_reviews.csv`.
+## Dataset & Scope
+* **Source:** Scraped Google Maps reviews across regional public courses (e.g., Kennedy Golf Course)
+* **Key Columns:** `review_text`, `star_rating`, `course_name`, `review_date`, `location`
+* **Segment & Temporal Analysis:** Leverages timestamps and course groupings to evaluate whether complaints (such as pace of play or turf maintenance) spike seasonally or during peak operating hours.
 
-## Planned Use of Tools
-* **Claude API:** Data labeling & feature enrichment (tagging reviews with operational sub-dimensions like `pace_of_play_issue` or `green_quality`).
-* **Classical NLP:** TF-IDF n-gram tokenization + Logistic Regression/Naive Bayes to ensure interpretable feature weights and fast, cost-free inference on new reviews.
+## Methodology & Tooling
+* **Structured Information Extraction (Path B):** Uses the Claude API to process review texts offline, extracting aspect-based sentiment and binary issue flags (e.g., `pace_of_play_issue`, `course_condition_issue`, `service_issue`)
+* **Explanatory Regression Analysis:** Regresses star ratings against extracted aspect flags—controlling for course and time—to calculate the exact rating penalty associated with each specific operational failure.
+* **Comparative Modeling:** Evaluates multiple feature spaces (Baseline TF-IDF/n-grams vs. Claude-extracted operational topics vs. aspect-based sentiment) to maximize business interpretability.
+
+## Actionable Outcomes (Moving Past Weak Recommendations)
+Instead of vague suggestions like *"improve pace of play,"* this pipeline generates quantified, time-bound findings for management:
+* *Example Target Output:* Quantifying that negative sentiment tied to pace-of-play issues increases by a measurable percentage during Q3 weekend morning tee times, driving a specific star-rating penalty.
+* *Who Acts & What They Do Differently:* General Managers and Superintendents use these insights to dynamically adjust tee-time spacing intervals or reschedule heavy maintenance windows to off-peak days.
 
 ## Repository Layout
-* `data/`: Sample datasets and feature maps.
-* `notebooks/`: Exploratory data analysis, feature extraction, and model training.
-* `src/`: Reusable Python modules for data collection and preprocessing.
+* `data/` — Contains structured CSV datasets (e.g., `kennedy_golf_reviews.csv`)
+* `notebooks/` — Sequential Jupyter notebooks covering data acquisition, text preprocessing, feature extraction, and explanatory regression analysis.
+* `src/` — Reusable modular Python code for data loading and preprocessing.
